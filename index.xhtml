@@ -109,7 +109,7 @@ public class Crossing
             int i = L;  // 元の配列のポインタ
             
             // どちらかの部分配列をスキャンし終わるまで部分配列をマージする
-            while( l &lt; left.length && r &lt; right.length ) {
+            while( l &lt; left.length &amp;&amp; r &lt; right.length ) {
                 // 初項どうしを比べる
                 // 左部分配列のほうが大きくなければ左部分配列から要素を取り出して元の配列に戻す
                 if( left[ l ] &lt;= right[ r ] ) {

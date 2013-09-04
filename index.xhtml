@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
   <head>
     <meta charset="UTF-8"/>
     <title>クロッシング問題 - 夏色日傘のCodeIQ解答</title>
+    <link rel="stylesheet" href="index.css"/>
   </head>
   <body>
     <h1>交差点をすばやく数えよう！ -クロッシング問題-</h1>
-    <div class="lastModified">作成：2013-09-03 夏色日傘（@shade0710math）</div>
+    <div class="lastModified">作成：2013-09-03 夏色日傘（<a href="https://twitter.com/shade0710math">@shade0710math</a>）</div>
     <h2>はじめに</h2>
     <p>このたび、9 月 2 日早朝まで <a href="https://codeiq.jp/">CodeIQ</a> にて出題されていた、<a href="https://codeiq.jp/ace/yuki_hiroshi/q432">結城浩先生のクロッシング問題</a>を解いてみました。ちょっとした線形代数の知識と、これまたちょっとしたアルゴリズムの知識さえあればあっさり解ける問題でした。</p>
     <p>なお、この問題は「正解を <em>3 秒以内に</em>出力せよ」というミッションになっています。素朴な実装でも正解を導き出せるのですが、いかにして実行時間を短くできるかということで挑戦者の皆さんの心に火をつけてしまったようで、気付けば結城先生の問題の中で過去一番の人気問題となっていたようです（<a href="#note01">注1</a>）。アルゴリズムを工夫するなど正攻法で時短を試みた人もいれば C などの高速な言語で実装した人もいて、様々なアプローチがあるのだなぁと思いました。</p>
-    <p>ちなみに、私は Java で実装しており、最初は素朴な（計算量 <code>O(<var>n</var><sup>2</sup>)</code> の）アルゴリズムを用いて 50 秒近くかけて出力していました。しかし、効率の良い（計算量 <code>O(<var>n</var>log<var>n</var>)</code> の）アルゴリズムを利用することで、約 0.7 秒（元の 1/7 の時間!!）で出力することができました。そして、ファイル読み込み時の処理を改善（<a href="#note02">注2</a>）した結果、実行時間を約 <em>0.2 秒</em>にまで短縮することができました。</p>
+    <p>ちなみに、私は Java で実装しており、最初は素朴な（計算量 <code>O(<var>n</var><sup>2</sup>)</code> の）アルゴリズムを用いて 50 秒近くかけて出力していました。しかし、効率の良い（計算量 <code>O(<var>n</var>log<var>n</var>)</code> の）アルゴリズムを利用することで、約 0.7 秒（元の 1/70 の時間!!）で出力することができました。そして、ファイル読み込み時の処理を改善（<a href="#note02">注2</a>）した結果、実行時間を約 <em>0.2 秒</em>にまで短縮することができました。</p>
     <h2>クロッシング問題とは</h2>
     <p>クロッシング問題とは、光学素子（クロッシング素子）の間を飛び交う光線の交差点の個数を求める問題です。</p>
     <p><var>n</var> 個のクロッシング素子には光線のスタート側とゴール側のそれぞれに番号が振られており、スタート側には 1 から <var>n</var> までの数が順番に、ゴール側には 1 から <var>n</var> までの数がランダムに振られています。そして、スタート側の素子からゴール側の同じ番号の素子に向かって光線が飛んでいくようになっています。</p>
-    <p>クロッシング素子の並びがファイル crossing.txt に記載されていました（現在は公開終了となっています）。行番号がスタート側の素子の番号に、各行に書かれている整数がゴール側の素子の番号を表しています。この crossing.txt をもとに光線の交差点の数を求めるのが、今回解いたクロッシング問題なのです。</p>
+    <p>クロッシング素子の並びがファイル crossing.txt に記載されていました（現在は公開終了となっています）。行番号がスタート側の素子の番号を、各行に書かれている整数がゴール側の素子の番号を表しています。この crossing.txt をもとに光線の交差点の数を求めるのが、今回解いたクロッシング問題なのです。</p>
     <h2>実装したプログラム</h2>
+    <p>詳しい解説は「<a href="#description">解説</a>」の項を参照願います。</p>
     <h3>Crossing.java</h3>
     <p>クロッシング問題を解くためのクラスです。<code>getInstance</code> メソッドでインスタンスを取得し、<code>solve</code> メソッド（パラメータはファイル名）でクロッシング問題を解きます。</p>
     <pre>
@@ -30,7 +32,7 @@ import java.util.Arrays;
 
 /**
  * &lt;p&gt;クロッシング問題のソルバークラスです。&lt;/p&gt;
- * @author Higasa Natsuiro (shade0710)
+ * @author Higasa Natsuiro (shade0710math)
  */
 public class Crossing
 {
@@ -48,21 +50,23 @@ public class Crossing
     }
     
     /**
-     * &lt;p&gt;与えられた名前のファイルを読み込み、そのデータの「交点」の数を返します。マージソートを用いることで高速なカウントを実現しています。&lt;/p&gt;
+     * &lt;p&gt;与えられた名前のファイルを読み込み、そのデータの「交差点」の数を返します。
+     * マージソートを用いることで高速なカウントを実現しています。&lt;/p&gt;
      * @param fileName ファイル名
-     * @return 交点の数
+     * @return 交差点の数
      */
     public long solve( String fileName )
     {
         // ファイルは files フォルダにあるものとする
-        try( BufferedReader reader = new BufferedReader( new FileReader( new File( "files", fileName ) ) ) ) {
+        try( BufferedReader br
+            = new BufferedReader( new FileReader( new File( "files", fileName ) ) ) ) {
             
             final int INITIAL_SIZE = 10;
             long[] numbers = new long[ INITIAL_SIZE ];
             int lineNumber = 0;
             
             // ファイルを一行ずつ読み込む
-            for( String line = reader.readLine(); line != null; line = reader.readLine() ) {
+            for( String line = br.readLine(); line != null; line = br.readLine() ) {
                 // 読み込んだ行数が多ければ、数字リストのサイズを増やす
                 if( numbers.length &lt;= lineNumber ) {
                     numbers = Arrays.copyOf( numbers, numbers.length * 2 );
@@ -135,8 +139,7 @@ public class Crossing
         }
         return result;
     }
-}
-    </pre>
+}</pre>
     <h3>MainCrossing.java</h3>
     <p>クロッシング問題を実行するクラスです。</p>
     <pre>
@@ -146,31 +149,35 @@ import codeiq.hyuki.crossing.Crossing;
 
 public class MainCrossing
 {
-	public static void main( String... args )
-	{
-		Crossing crossing = Crossing.getInstance();
-		
-		long start = System.currentTimeMillis();
-		long count = crossing.solve( "crossing.txt" );
-		long end = System.currentTimeMillis();
-		
-		long time = ( end - start ) / 1000L;
-		
-		System.out.printf( "%d,%d%n", count, time );
-		System.out.println( "ENV: Java 7" );
-		System.out.printf( "%nミリ秒単位の実行時間：%d [msec]%n", ( end - start ) );
-	}
-}
-    </pre>
+    public static void main( String... args )
+    {
+        // クロッシング問題ソルバーの作成
+        Crossing crossing = Crossing.getInstance();
+        
+        // クロッシング問題を解く
+        long start = System.currentTimeMillis();  // 測定開始
+        long count = crossing.solve( "crossing.txt" );
+        long end = System.currentTimeMillis();    // 測定終了
+        
+        // ミリ秒単位でも計算時間を求めておく（これ自体は答案の評価に関係しない）
+        long time = ( end - start ) / 1000L;
+        
+        // 答案の出力（標準出力ではなく answer.txt に直接書き出してもよかった？）
+        System.out.printf( "%d,%d%n", count, time );
+        System.out.println( "ENV: Java 7" );
+        System.out.printf( "%nミリ秒単位の実行時間：%d [msec]%n", ( end - start ) );
+    }
+}</pre>
+
+    <h3>実行結果</h3>
     <p>実行結果は以下の通りです。Java だと約 220 [msec] が限界でしょうか……。</p>
     <pre>
 24689222839,0
 ENV: Java 7
 
-ミリ秒単位の実行時間：215 [msec]
-    </pre>
+ミリ秒単位の実行時間：215 [msec]</pre>
     
-    <h2>解説</h2>
+    <h2 id="description">解説</h2>
     <p><em>未執筆</em>（すみません、後日掲載します……）。</p>
     
     <h2>終わりに</h2>
@@ -180,9 +187,12 @@ ENV: Java 7
     
     <hr class="separator" />
     <ul class="note">
-      <li id="note01">注1. 他の問題は挑戦者数が 200 人に満たなかったのですが、この問題だけなんと 432 人に!!</li>
+      <li id="note01">注1. 他の問題は挑戦者数が 200 人に満たなかったのですが、この問題だけなんと 432 人に!!（退会済みのかたがいらっしゃったようで、実質430人だそうです）</li>
       <li id="note02">注2. java.util.Scanner クラスを使っていたところを java.io.BufferedReader クラスを用いるようにしたほか、「数字以外のものを読み込んだ場合は例外を投げる」という処理（分岐）を入れていたところを削除しました（<a href="#note03">注3</a>）。</li>
       <li id="note03">注3. Integer.parseInt メソッドを使っているため、数字以外のものが読み込まれると例外が投げられます。よって、例外を投げるための分岐をわざわざループ中に組み込むのは無駄だという判断です。なお、既に読み込まれたことがある数や負の数などの不正なデータは入力ファイルに記載されていないという前提で組んでいますが、本来はそのようなデータのチェックが必要になるかと思われます。</li>
     </ul>
+    
+    <hr class="separator" />
+    <div class="copyright">&copy;Higasa Natsuiro(shade0710/shade0710math) 2013 All rights reserved.</div>
   </body>
 </html>

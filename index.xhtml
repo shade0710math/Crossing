@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
   <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>クロッシング問題 - 夏色日傘のCodeIQ解答</title>
     <link rel="stylesheet" href="index.css"/>
   </head>
@@ -21,8 +22,8 @@
     <p>詳しい解説は「<a href="#description">解説</a>」の項を参照願います。</p>
     <h3>Crossing.java</h3>
     <p>クロッシング問題を解くためのクラスです。<code>getInstance</code> メソッドでインスタンスを取得し、<code>solve</code> メソッド（パラメータはファイル名）でクロッシング問題を解きます。</p>
-    <pre>
-package codeiq.hyuki.crossing;
+    <div class="source">
+      <pre><code>package codeiq.hyuki.crossing;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,8 +59,7 @@ public class Crossing
     public long solve( String fileName )
     {
         // ファイルは files フォルダにあるものとする
-        try( BufferedReader br
-            = new BufferedReader( new FileReader( new File( "files", fileName ) ) ) ) {
+        try( BufferedReader br = new BufferedReader( new FileReader( new File( "files", fileName ) ) ) ) {
             
             final int INITIAL_SIZE = 10;
             long[] numbers = new long[ INITIAL_SIZE ];
@@ -139,11 +139,12 @@ public class Crossing
         }
         return result;
     }
-}</pre>
+}</code></pre>
+    </div>
     <h3>MainCrossing.java</h3>
     <p>クロッシング問題を実行するクラスです。</p>
-    <pre>
-package codeiq.hyuki.crossing.main;
+    <div class="source">
+      <pre><code>package codeiq.hyuki.crossing.main;
 
 import codeiq.hyuki.crossing.Crossing;
 
@@ -167,17 +168,24 @@ public class MainCrossing
         System.out.println( "ENV: Java 7" );
         System.out.printf( "%nミリ秒単位の実行時間：%d [msec]%n", ( end - start ) );
     }
-}</pre>
+}</code></pre>
+    </div>
 
     <h3>実行結果</h3>
     <p>実行結果は以下の通りです。Java だと約 220 [msec] が限界でしょうか……。</p>
-    <pre>
-24689222839,0
+    <div class="source">
+      <pre><code>24689222839,0
 ENV: Java 7
 
-ミリ秒単位の実行時間：215 [msec]</pre>
+ミリ秒単位の実行時間：215 [msec]</code></pre>
+    </div>
     
     <h2 id="description">解説</h2>
+<!--    <h3>交差点の数を求める、とは？</h3>
+    <p>素子の個数を 3 とした場合の全 6 通りの配置や、サンプル（素子 9 個で [3, 1, 4, 5, 9, 2, 6, 8, 7] の配置）を眺めていると、交差点の数は<em>「隣接したペアで左右の大小が入れ替わっているものの数」として求められる</em>ということに気付きます。言い換えると、「数列 {<var>a</var><sub><var>n</var></sub>} をゴール側の素子の配列、自然数 <var>n</var> を素子の個数とし、2 つの任意の自然数 <var>i</var>, <var>j</var> に対して <var>i</var> &lt; <var>j</var> &#8804; <var>n</var> かつ <var>a</var><sub><var>i</var></sub> &gt; <var>a</var><sub><var>j</var></sub> を満たすペア (<var>i</var>, <var>j</var>) の個数」こそが、クロッシング問題において求めるべき交差点の数であるといえます。</p>
+    <p>線形台数を学んだことのあるかたなら、これを聞くと「転倒数（<a href="#note04">注4</a>）」そのものであると気付くことでしょう。つまり、この問題は<em>本質的には、与えられたデータ（より正確にいうと、行番号から各行のデータへの置換）に対する転倒数を求める問題である</em>ということができるでしょう。</p>
+    <p>原理的には、クロッシング素子 2 個の番号からなるペア（順序対）をすべて求め、要素の大小順序が入れ替わっているものを数え上げていけば求められます。実装上は、ファイル crossing.txt から一行読み込むたびに以前に読んだデータ（配列に保持しておきます）の中で今読み込んだ行のデータよりも大きいものがないかを探し、あったらその個数だけカウントアップすればよいでしょう。</p>
+    <h3>交差点の数を「素早く」求めるには？</h3>-->
     <p><em>未執筆</em>（すみません、後日掲載します……）。</p>
     
     <h2>終わりに</h2>
@@ -190,6 +198,7 @@ ENV: Java 7
       <li id="note01">注1. 他の問題は挑戦者数が 200 人に満たなかったのですが、この問題だけなんと 432 人に!!（退会済みのかたがいらっしゃったようで、実質430人だそうです）</li>
       <li id="note02">注2. java.util.Scanner クラスを使っていたところを java.io.BufferedReader クラスを用いるようにしたほか、「数字以外のものを読み込んだ場合は例外を投げる」という処理（分岐）を入れていたところを削除しました（<a href="#note03">注3</a>）。</li>
       <li id="note03">注3. Integer.parseInt メソッドを使っているため、数字以外のものが読み込まれると例外が投げられます。よって、例外を投げるための分岐をわざわざループ中に組み込むのは無駄だという判断です。なお、既に読み込まれたことがある数や負の数などの不正なデータは入力ファイルに記載されていないという前提で組んでいますが、本来はそのようなデータのチェックが必要になるかと思われます。</li>
+      <li id="note04">注4. 結城先生のフィードバックでは「逆転数」という用語が用いられています。私は転倒数と教わったので、本文中では「転倒数」で統一しています。</li>
     </ul>
     
     <hr class="separator" />

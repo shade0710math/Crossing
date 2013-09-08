@@ -69,13 +69,19 @@ li {
 /**
  * コードのスタイル
  */
-pre {
-    margin: 1em;
-    padding: 1em;
+div.source {
     border: solid 1px blue;
+    background-color: inherit;
+    width: 99%;
+    margin: auto;
+}
+div.source pre {
+    margin: 1em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: auto;
 }
 code {
-    font-size: inherit;
 }
 
 /**

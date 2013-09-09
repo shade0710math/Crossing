@@ -82,6 +82,7 @@ div.source pre {
     overflow: auto;
 }
 code {
+    font-size: inherit;
 }
 
 /**
@@ -93,5 +94,13 @@ div.lastModified {
     text-align: right;
 }
 div.copyright {
+    text-align: center;
+}
+
+/**
+ * 数式のスタイル
+ */
+div.math {
+    margin: auto;
     text-align: center;
 }
